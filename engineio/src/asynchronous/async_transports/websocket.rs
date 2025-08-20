@@ -10,7 +10,8 @@ use futures_util::stream::StreamExt;
 use futures_util::Stream;
 use http::HeaderMap;
 use tokio::sync::RwLock;
-use tokio_tungstenite::connect_async;
+//use tokio_tungstenite::connect_async;
+use tokio_tungstenite::bt_connect_async;
 use tungstenite::client::IntoClientRequest;
 use url::Url;
 
@@ -38,7 +39,7 @@ impl WebsocketTransport {
             req.headers_mut().extend(map);
         }
 
-        let (ws_stream, _) = connect_async(req).await?;
+        let (ws_stream, _) = bt_connect_async(req).await?;
         let (sen, rec) = ws_stream.split();
 
         let inner = AsyncWebsocketGeneralTransport::new(sen, rec).await;

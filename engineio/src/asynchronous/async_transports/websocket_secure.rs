@@ -11,7 +11,8 @@ use futures_util::StreamExt;
 use http::HeaderMap;
 use native_tls::TlsConnector;
 use tokio::sync::RwLock;
-use tokio_tungstenite::connect_async_tls_with_config;
+//use tokio_tungstenite::connect_async_tls_with_config;
+use tokio_tungstenite::bt_connect_async;
 use tokio_tungstenite::Connector;
 use tungstenite::client::IntoClientRequest;
 use url::Url;
@@ -52,13 +53,15 @@ impl WebsocketSecureTransport {
         // When `false`, data is buffered until there is a sufficient amount to send out, thereby avoiding the frequent sending of small packets.
         //
         // See the docs: https://docs.rs/tokio/latest/tokio/net/struct.TcpStream.html#method.set_nodelay
-        let (ws_stream, _) = connect_async_tls_with_config(
-            req,
-            None,
-            /*disable_nagle=*/ false,
-            tls_config.map(Connector::NativeTls),
-        )
-        .await?;
+        //let (ws_stream, _) = connect_async_tls_with_config(
+        //    req,
+        //    None,
+        //    /*disable_nagle=*/ false,
+        //    tls_config.map(Connector::NativeTls),
+        //)
+        //.await?;
+
+        let (ws_stream, _) = bt_connect_async(req).await?;
 
         let (sen, rec) = ws_stream.split();
         let inner = AsyncWebsocketGeneralTransport::new(sen, rec).await;

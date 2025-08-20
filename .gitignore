@@ -4,4 +4,9 @@ target
 ci/node_modules
 ci/package-lock.json
 ci/cert
-
+Cargo.lock
+debug/
+**/*.rs.bk
+*.pdb
+engineio/Cargo.lock
+socketio/Cargo.lock
