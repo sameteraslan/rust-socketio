@@ -7,19 +7,12 @@ use futures_util::{
     stream::{SplitSink, SplitStream},
     FutureExt, SinkExt, Stream, StreamExt,
 };
-use tokio::{net::TcpStream, sync::Mutex};
-use tokio_tungstenite::{MaybeTlsStream, WebSocketStream};
+use tokio::sync::Mutex;
+use tokio_tungstenite::{BoxedStream, MaybeTlsStream, WebSocketStream};
 use tungstenite::Message;
 
-//type AsyncWebsocketSender = SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>;
-//type AsyncWebsocketReceiver = SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>;
-
-use bluer::{
-    rfcomm::{ Stream as BtStream},
-};
-
-type AsyncWebsocketSender = SplitSink<WebSocketStream<MaybeTlsStream<BtStream>>, Message>;
-type AsyncWebsocketReceiver = SplitStream<WebSocketStream<MaybeTlsStream<BtStream>>>;
+type AsyncWebsocketSender = SplitSink<WebSocketStream<MaybeTlsStream<BoxedStream>>, Message>;
+type AsyncWebsocketReceiver = SplitStream<WebSocketStream<MaybeTlsStream<BoxedStream>>>;
 
 /// A general purpose asynchronous websocket transport type. Holds
 /// the sender and receiver stream of a websocket connection
@@ -33,10 +26,10 @@ pub(crate) struct AsyncWebsocketGeneralTransport {
 
 impl AsyncWebsocketGeneralTransport {
     pub(crate) async fn new(
-//        sender: SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>,
- //       receiver: SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
-        sender: SplitSink<WebSocketStream<MaybeTlsStream<BtStream>>, Message>,
-        receiver: SplitStream<WebSocketStream<MaybeTlsStream<BtStream>>>,
+        //        sender: SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>,
+        //       receiver: SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
+        sender: SplitSink<WebSocketStream<MaybeTlsStream<BoxedStream>>, Message>,
+        receiver: SplitStream<WebSocketStream<MaybeTlsStream<BoxedStream>>>,
     ) -> Self {
         AsyncWebsocketGeneralTransport {
             sender: Arc::new(Mutex::new(sender)),

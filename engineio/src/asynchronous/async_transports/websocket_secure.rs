@@ -12,8 +12,7 @@ use http::HeaderMap;
 use native_tls::TlsConnector;
 use tokio::sync::RwLock;
 //use tokio_tungstenite::connect_async_tls_with_config;
-use tokio_tungstenite::bt_connect_async;
-use tokio_tungstenite::Connector;
+use tokio_tungstenite::connect_async;
 use tungstenite::client::IntoClientRequest;
 use url::Url;
 
@@ -33,7 +32,7 @@ impl WebsocketSecureTransport {
     /// Tls connector and an URL.
     pub(crate) async fn new(
         base_url: Url,
-        tls_config: Option<TlsConnector>,
+        _tls_config: Option<TlsConnector>,
         headers: Option<HeaderMap>,
     ) -> Result<Self> {
         let mut url = base_url;
@@ -61,7 +60,7 @@ impl WebsocketSecureTransport {
         //)
         //.await?;
 
-        let (ws_stream, _) = bt_connect_async(req).await?;
+        let (ws_stream, _) = connect_async(req).await?;
 
         let (sen, rec) = ws_stream.split();
         let inner = AsyncWebsocketGeneralTransport::new(sen, rec).await;
